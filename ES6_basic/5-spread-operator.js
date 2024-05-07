@@ -1,7 +1,3 @@
-export default function concatArrays(...args) {
-  let result = [];
-  args.forEach(arg => {
-  result = result.concat(arg);
-  });
-  return result;
+export default function concatArrays(array1, array2, string) {
+  return [...array1,...array2,...string];
 }
