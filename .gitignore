@@ -6284,3 +6284,10 @@ ES6_basic/node_modules/write/index.js
 ES6_basic/node_modules/write/LICENSE
 ES6_basic/node_modules/write/package.json
 ES6_basic/node_modules/write/README.md
+ES6_classes/babel.config.js
+node_modules
+babel.config.js
+.eslintrc.js
+package-lock.json
+package.json
+ES6_basic/eslint.config.mjs
