@@ -11,7 +11,7 @@ export default class Airport {
   get name() {
     return this._name;
   }
-  
+
   set name(val) {
     if (typeof (val) === 'string') {
       this._name = val;
@@ -23,7 +23,7 @@ export default class Airport {
   get code() {
     return this._code;
   }
-  
+
   set code(val) {
     if (typeof (val) === 'string') {
       this._code = val;
@@ -31,5 +31,4 @@ export default class Airport {
       throw TypeError('Code must be a string');
     }
   }
-
 }
