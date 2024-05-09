@@ -1,3 +1,3 @@
 export default function setFormArray(array) {
-  return new Set([array]);
+  return new Set(array);
 }
