@@ -7,7 +7,7 @@ less than or equal to the input
 """
 
 
-def floor(n:float) -> int:
+def floor(n: float) -> int:
     """
     Returns the largest integer less than or equal to input.
 
