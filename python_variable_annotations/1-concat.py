@@ -4,6 +4,7 @@ This module contains the add function that takes two strings
 and concatenates them.
 """
 
+
 def concat(str1: string, str2: string) -> string:
     """
     Returns a concatenated string.
