@@ -12,8 +12,10 @@ def floor(n: float) -> int:
     Returns the largest integer less than or equal to input.
 
     Args:
-      n(float): A float
+      n(float): A float.
+
     Returns:
-        int: largest int <= input
+        int: largest int <= input.
+
     """
     return math.floor(n)
