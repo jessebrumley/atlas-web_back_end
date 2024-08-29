@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-import math
 """
 This module takes in a float and returns the largest integer
 less than or equal to the input
 """
+import math
 
 
 def floor(n: float) -> int:
