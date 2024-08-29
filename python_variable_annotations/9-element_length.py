@@ -4,7 +4,7 @@ This module ...
 """
 
 
-def func(input: type) -> return:
+def func(input: type) -> :
     """
     Returns ...
 
