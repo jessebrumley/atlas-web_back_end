@@ -9,9 +9,9 @@ def to_str(n: float) -> str:
     """
     Returns the string representation of the float.
 
-    Args: 
+    Args:
       n: A float
-    
+
     Returns:
       str: A string representing the float
     """
