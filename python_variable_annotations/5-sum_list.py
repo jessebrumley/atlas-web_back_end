@@ -12,8 +12,8 @@ def sum_list(input_list: list) -> float:
 
     Args:
       input_list: a list of float numbers
-
+    
     Returns:
         float: a single float number
     """
-    sum(float(input_list))
+    sum(input_list)
