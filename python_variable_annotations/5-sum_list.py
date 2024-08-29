@@ -8,12 +8,12 @@ import math
 
 def sum_list(input_list: list) -> float:
     """
-    Returns sum of input_list.
+    Returns the sum of a list of float numbers.
 
     Args:
-      input_list: a list of float numbers
-    
+      input_list (list of floats): a list of float numbers
+
     Returns:
-        float: a single float number
+        float: The sum of the list as a single float number.
     """
     sum(input_list)
