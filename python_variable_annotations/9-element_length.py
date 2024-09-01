@@ -3,7 +3,7 @@
 This module takes a list of strings and returns a list of tuples.
 Each tuple contains a string and its length.
 """
-from typing import List, Tuple
+from typing import Sequence, List, Tuple
 
 
 def element_length(lst: Iterable[Sequence]) -> List[Tuple[Sequence, int]]:
