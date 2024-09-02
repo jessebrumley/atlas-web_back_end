@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-A function measures the total run time for the wait_n function.
+A function measures the average run time for the wait_n function.
 """
 import asyncio
 import time
