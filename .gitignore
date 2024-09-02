@@ -6292,4 +6292,7 @@ package-lock.json
 package.json
 ES6_basic/eslint.config.mjs
 python_async_function/helper
-python_async_function/helper.py
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

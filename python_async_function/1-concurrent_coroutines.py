@@ -8,7 +8,6 @@ the delays should be in ascending order without using sort() because of
 concurrency.
 """
 import asyncio
-import importlib.util
 from typing import List
 
 wait_random = __import__('0-basic_async_syntax').wait_random
@@ -25,8 +24,6 @@ async def wait_n(n: int, max_delay: int) -> List[float]:
     Returns:
         list[float]: A list of floats, each returned from wait_random.
     """
-    tasks: List[asyncio.Task] = [wait_random(max_delay) for _ in range(n)]
-
     tasks: List[asyncio.Task] = [wait_random(max_delay) for _ in range(n)]
 
     results: List[float] = await asyncio.gather(*tasks)
