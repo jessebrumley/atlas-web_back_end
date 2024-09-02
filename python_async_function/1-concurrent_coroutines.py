@@ -9,19 +9,12 @@ concurrency.
 """
 import asyncio
 import importlib.util
+from typing import List
 
-# Apparently it won't import from a filename starting with '0-'
-module_name = "basic_async_syntax"
-file_path = "./0-basic_async_syntax.py"
-
-spec = importlib.util.spec_from_file_location(module_name, file_path)
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
-
-wait_random = module.wait_random
+wait_random = __import__('0-basic_async_syntax').wait_random
 
 
-async def wait_n(n: int, max_delay: int) -> list[float]:
+async def wait_n(n: int, max_delay: int) -> List[float]:
     """
     Calls wait_random n number of times.
 
@@ -32,8 +25,10 @@ async def wait_n(n: int, max_delay: int) -> list[float]:
     Returns:
         list[float]: A list of floats, each returned from wait_random.
     """
-    tasks = [wait_random(max_delay) for _ in range(n)]
+    tasks: List[asyncio.Task] = [wait_random(max_delay) for _ in range(n)]
 
-    results = await asyncio.gather(*tasks)
+    tasks: List[asyncio.Task] = [wait_random(max_delay) for _ in range(n)]
+
+    results: List[float] = await asyncio.gather(*tasks)
 
     return sorted(results)
