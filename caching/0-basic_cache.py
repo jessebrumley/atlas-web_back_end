@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
 BasicCache module implements a basic caching system with no size limit.
 This class inherits from BaseCaching and uses a
