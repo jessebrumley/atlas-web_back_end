@@ -24,7 +24,7 @@ class BasicCache(BaseCaching):
         """
         # Adds item to cached data
         if key is not None and item is not None:
-            self.cache_data[key] = item
+            self.cache_data.update({key: item})
 
     def get(self, key: str) -> str | None:
         """
