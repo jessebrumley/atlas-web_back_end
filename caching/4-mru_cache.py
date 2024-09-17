@@ -3,7 +3,6 @@
 """
 
 from base_caching import BaseCaching
-from collections import OrderedDict
 
 
 class MRUCache(BaseCaching):
@@ -14,8 +13,7 @@ class MRUCache(BaseCaching):
         """ Initializes the MRUCache instance
         """
         super().__init__()
-        self.cache_data = OrderedDict()
-        self.usage_order = []
+        self.cache_data = {}
 
     def put(self, key, item):
         """ Adds an item to the cache
@@ -30,22 +28,19 @@ class MRUCache(BaseCaching):
         if key is None or item is None:
             return
 
-        # If key already exists, update the item and mark it as recently used
+        # If the key already exists, update the item
         if key in self.cache_data:
-            self.cache_data[key] = item
-            self.usage_order.remove(key)
-        else:
-            # Remove the most recently used item if the cache is full
-            if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-                most_recent_key = self.usage_order.pop()
-                self.cache_data.pop(most_recent_key)
-                print(f"DISCARD: {most_recent_key}")
+            del self.cache_data[key]
 
-            # Add the new item to the cache
-            self.cache_data[key] = item
+        # If the cache is full, discard the most recently used item
+        if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
+            # Find the most recently used item
+            most_recent_key = next(reversed(self.cache_data))
+            self.cache_data.pop(most_recent_key)
+            print(f"DISCARD: {most_recent_key}")
 
-        # Mark the key as most recently used
-        self.usage_order.insert(0, key)
+        # Add the new item to the cache
+        self.cache_data[key] = item
 
     def get(self, key):
         """ Retrieves an item from the cache
@@ -59,10 +54,11 @@ class MRUCache(BaseCaching):
         if key is None:
             return None
 
-        # Retrieve the item if it exists and mark it as most recently used
+        # Retrieve the item if it exists
         if key in self.cache_data:
-            self.usage_order.remove(key)
-            self.usage_order.insert(0, key)
-            return self.cache_data[key]
+            # Move accessed item to the end to mark it as most recently used
+            item = self.cache_data.pop(key)
+            self.cache_data[key] = item
+            return item
 
         return None
