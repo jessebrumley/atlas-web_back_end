@@ -23,11 +23,11 @@ class FIFOCache(BaseCaching):
 
         if key is not None and item is not None:
             if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-                print(f"DISCARD: {self.stack[0]}")
+                print(f"DISCARD: {self.order[0]}")
                 del self.cache_data[self.order[0]]
                 self.order.pop(0)
             self.cache_data.update({key: item})
-            self.stack.append(key)
+            self.order.append(key)
 
     def get(self, key):
         """
