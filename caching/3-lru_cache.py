@@ -36,11 +36,11 @@ class LRUCache(BaseCaching):
         if key in self.cache_data:
             # If key already exists, remove it first
             del self.cache_data[key]
-        
+
         # Add the item to the end of the cache_data
         self.cache_data[key] = item
 
-        # If the cache exceeds the maximum allowed items, remove the oldest item
+        # If cache exceeds the maximum items, remove the oldest item
         if len(self.cache_data) > BaseCaching.MAX_ITEMS:
             oldest_key = next(iter(self.cache_data))
             self.cache_data.pop(oldest_key)
