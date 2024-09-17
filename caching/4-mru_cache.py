@@ -15,6 +15,7 @@ class MRUCache(BaseCaching):
         """
         super().__init__()
         self.cache_data = OrderedDict()
+        self.usage_order = []
 
     def put(self, key, item):
         """ Adds an item to the cache
@@ -29,13 +30,22 @@ class MRUCache(BaseCaching):
         if key is None or item is None:
             return
 
-        # Remove the most recently used item if the cache is full
-        if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-            most_recent_key, _ = self.cache_data.popitem(last=True)
-            print(f"DISCARD: {most_recent_key}")
+        # If key already exists, update the item and mark it as recently used
+        if key in self.cache_data:
+            self.cache_data[key] = item
+            self.usage_order.remove(key)
+        else:
+            # Remove the most recently used item if the cache is full
+            if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
+                most_recent_key = self.usage_order.pop()
+                self.cache_data.pop(most_recent_key)
+                print(f"DISCARD: {most_recent_key}")
 
-        # Add the new item to the cache
-        self.cache_data[key] = item
+            # Add the new item to the cache
+            self.cache_data[key] = item
+
+        # Mark the key as most recently used
+        self.usage_order.insert(0, key)
 
     def get(self, key):
         """ Retrieves an item from the cache
@@ -49,4 +59,10 @@ class MRUCache(BaseCaching):
         if key is None:
             return None
 
-        return self.cache_data.get(key)
+        # Retrieve the item if it exists and mark it as most recently used
+        if key in self.cache_data:
+            self.usage_order.remove(key)
+            self.usage_order.insert(0, key)
+            return self.cache_data[key]
+
+        return None
