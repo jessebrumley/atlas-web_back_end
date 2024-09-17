@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" LRUCache Implementation
+""" LRUCache Implementation without move_to_end
 """
 
 from base_caching import BaseCaching
@@ -33,11 +33,14 @@ class LRUCache(BaseCaching):
         if key is None or item is None:
             return
 
-        # Insert the item into cache_data
+        if key in self.cache_data:
+            # If key already exists, remove it first
+            del self.cache_data[key]
+        
+        # Add the item to the end of the cache_data
         self.cache_data[key] = item
-        self.cache_data.move_to_end(key)
 
-        # Remove the least recently used item if cache exceeds the limit
+        # If the cache exceeds the maximum allowed items, remove the oldest item
         if len(self.cache_data) > BaseCaching.MAX_ITEMS:
             oldest_key = next(iter(self.cache_data))
             self.cache_data.pop(oldest_key)
@@ -58,4 +61,9 @@ class LRUCache(BaseCaching):
         if key is None:
             return None
 
-        return self.cache_data.get(key)
+        if key in self.cache_data:
+            # Move this item to the end to mark it as recently used
+            item = self.cache_data.pop(key)
+            self.cache_data[key] = item
+            return item
+        return None
