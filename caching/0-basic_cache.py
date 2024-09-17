@@ -13,12 +13,6 @@ class BasicCache(BaseCaching):
     BasicCache class provides a caching system without size constraints.
     It inherits from BaseCaching, which provides a cache_data dictionary.
     """
-
-    def __init__(self) -> None:
-        """Initialize the BasicCache instance by calling
-        the parent class constructor."""
-        super().__init__()
-
     def put(self, key: str, item: str) -> None:
         """
         Store the item in the cache_data dictionary.
@@ -28,11 +22,9 @@ class BasicCache(BaseCaching):
             key (str): The key for the cache.
             item (str): The item to cache.
         """
-        # Prevents null/empty values
-        if key is None or item is None:
-            return
         # Adds item to cached data
-        self.cache_data[key] = item
+        if key is not None and item is not None:
+            self.cache_data[key] = item
 
     def get(self, key: str) -> str | None:
         """
