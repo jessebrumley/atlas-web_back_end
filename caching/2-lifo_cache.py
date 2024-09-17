@@ -30,8 +30,9 @@ class LIFOCache(BaseCaching):
             return
 
         if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-            self.cache_data.popitem(last=True)
-            print(f"DISCARD: {next(reversed(self.cache_data))}")
+            # Pop the most recently added item (last item in OrderedDict)
+            discarded_key, _ = self.cache_data.popitem(last=True)
+            print(f"DISCARD: {discarded_key}")
 
         self.cache_data[key] = item
 
