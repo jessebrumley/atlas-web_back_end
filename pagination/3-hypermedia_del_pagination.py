@@ -33,7 +33,7 @@ class Server:
             }
         return self.__indexed_dataset
 
-    def get_hyper_index(self, index: int = 0, page_size: int = 10) -> Dict:
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
         """Retrieve data with pagination resilience against deletions.
 
         Args:
@@ -43,9 +43,12 @@ class Server:
         Returns:
             A dictionary containing index, next index, page size, and data.
         """
-        assert isinstance(index, int) and index >= 0
+        assert isinstance(index, (int, type(None))) and (
+            index is None or index >= 0
+        )
         dataset = self.indexed_dataset()
-        assert index < len(dataset)
+        if index is None or index >= len(dataset):
+            index = 0  # Default to the start if index is None or out of range
 
         data = []
         next_index = index
