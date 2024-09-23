@@ -6,6 +6,9 @@ filtered_logger module for obfuscating log messages.
 import re
 from typing import List
 import logging
+import os
+import mysql.connector
+from mysql.connector import connection
 
 
 def filter_datum(
@@ -80,3 +83,23 @@ def get_logger() -> logging.Logger:
     logger.propagate = False
 
     return logger
+
+
+# Create a function to connect to the database
+def get_db() -> connection.MySQLConnection:
+    """ Connects to the MySQL database and returns the connection object.
+    """
+    # Retrieve credentials from environment variables
+    usr = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    pw = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    hst = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    db_name = os.getenv('PERSONAL_DATA_DB_NAME')
+
+    # Create a connection to the database
+    cnx = mysql.connector.connect(
+        user=usr,
+        password=pw,
+        host=hst,
+        database=db_name
+    )
+    return cnx
