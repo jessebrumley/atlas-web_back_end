@@ -9,6 +9,7 @@ import logging
 import os
 import mysql.connector
 from mysql.connector import connection
+import bcrypt
 
 
 def filter_datum(
@@ -103,3 +104,19 @@ def get_db() -> connection.MySQLConnection:
         database=db_name
     )
     return cnx
+
+
+def hash_password(password: str) -> bytes:
+    """ Hashes a password using bcrypt.
+
+    Arguments:
+    password: The plain text password to be hashed.
+
+    Returns:
+    A salted, hashed password as a byte string.
+    """
+    # Generate a salt
+    salt = bcrypt.gensalt()
+    # Hash the password
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed_password
