@@ -25,4 +25,5 @@ def filter_datum(
 
     pattern = rf'({"|".join(fields)})=([^ {re.escape(separator)}]*)'
 
-    return re.sub(pattern, lambda match: match.group(1) + '=' + redaction, message)
+    return re.sub(pattern,
+                  lambda match: f"{match.group(1)}={redaction}", message)
