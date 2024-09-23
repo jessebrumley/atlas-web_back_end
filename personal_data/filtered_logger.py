@@ -7,7 +7,10 @@ import re
 from typing import List
 
 
-def filter_datum(fields: List[str], redaction: str, message: str, separator: str) -> str:
+def filter_datum(fields: List[str],
+                 redaction: str,
+                 message: str,
+                 separator: str) -> str:
     """
     Returns the log message obfuscated by redacting sensitive fields.
 
@@ -20,7 +23,7 @@ def filter_datum(fields: List[str], redaction: str, message: str, separator: str
     Returns:
     The log message with specified fields redacted.
     """
-    # Create a single regex pattern that matches any of the fields followed by "=value"
-    pattern = f'({"|".join(map(re.escape, fields))})=.*?({separator}|$)'
-    # Replace the matched fields with the redacted value
-    return re.sub(pattern, lambda m: f'{m.group(1)}={redaction}{m.group(2)}', message)
+    for field in fields:
+        pattern = r"" + re.escape(field) + r"=.*?" + re.escape(separator)
+        message = re.sub(pattern, f"{field}={redaction}{separator}", message)
+    return message
