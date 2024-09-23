@@ -103,3 +103,38 @@ def get_db() -> connection.MySQLConnection:
         database=db_name
     )
     return cnx
+
+
+# Implement the main function
+def main() -> None:
+    """ Main function to retrieve and display user data from the database.
+    """
+    # Obtain a database connection
+    db_connection = get_db()
+
+    # Create a cursor to interact with the database
+    cursor = db_connection.cursor()
+
+    # Execute a query to retrieve all rows from the users table
+    cursor.execute("SELECT * FROM users")
+    rows = cursor.fetchall()
+
+    # Get the logger instance
+    logger = get_logger()
+
+    # Iterate through each row and log the data
+    for row in rows:
+        # Create a formatted log message with the row data
+        log_message = f"name={row[0]}; email={row[1]}; phone={row[2]}; " \
+                      f"ssn={row[3]}; password={row[4]}; ip={row[5]}; " \
+                      f"last_login={row[6]}; user_agent={row[7]}"
+        logger.info(log_message)
+
+    # Close the cursor and connection
+    cursor.close()
+    db_connection.close()
+
+
+# Ensure only the main function runs when the module is executed
+if __name__ == "__main__":
+    main()
