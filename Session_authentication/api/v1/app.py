@@ -10,9 +10,13 @@ import os
 
 auth = None
 auth_type = os.getenv('AUTH_TYPE')
+
 if auth_type == 'basic_auth':
     from api.v1.auth.basic_auth import BasicAuth
     auth = BasicAuth()
+elif auth_type == 'session_auth':
+    from api.v1.auth.session_auth import SessionAuth
+    auth = SessionAuth()
 else:
     from api.v1.auth.auth import Auth
     auth = Auth()
@@ -24,7 +28,8 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 @app.before_request
 def handle_request():
-    """ Handle request authorization and set current user """
+    """ Handle request authorization
+    """
     handled_paths = ['/api/v1/status/',
                      '/api/v1/unauthorized/',
                      '/api/v1/forbidden/']
@@ -34,8 +39,6 @@ def handle_request():
                 abort(401)
             if auth.current_user(request) is None:
                 abort(403)
-            request.current_user = auth.current_user(request)
-
 
 
 @app.errorhandler(404)
