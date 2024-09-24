@@ -18,7 +18,7 @@ class SessionAuth(Auth):
         Creates a Session ID for a user_id and stores it in the dictionary.
 
         Args:
-            user_id (str): The ID of user for whom session is created.
+            user_id (str): The ID of the user for whom the session is being created.
 
         Returns:
             str: The generated Session ID, or None if the user_id is invalid.
@@ -34,3 +34,19 @@ class SessionAuth(Auth):
 
         # Return the generated session ID
         return session_id
+
+    def user_id_for_session_id(self, session_id: str = None) -> str:
+        """
+        Retrieves a User ID based on a Session ID.
+
+        Args:
+            session_id (str): The session ID used for authentication.
+
+        Returns:
+            str: The user ID associated with the session ID, or None if not found.
+        """
+        if session_id is None or not isinstance(session_id, str):
+            return None
+
+        # Use .get() to safely retrieve the user ID from the dictionary
+        return self.user_id_by_session_id.get(session_id)
