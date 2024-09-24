@@ -1,74 +1,59 @@
 #!/usr/bin/env python3
-""" Authentication module
+""" Session Authorization module
 """
 from flask import request
-from typing import List, TypeVar
+from api.v1.auth.auth import Auth
+from models.user import User
 import os
+import uuid
 
-User = TypeVar('User')
 
-
-class Auth:
-    """ Auth class to manage API authentication
+class SessionAuth(Auth):
+    """ Session Authorization class
     """
 
-    def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """ Checks if authentication is required for a given path
-        Args:
-            path: The requested path
-            excluded_paths: List of paths that do not require authentication
-        Returns:
-            bool: True if authentication is required, False otherwise
+    user_id_by_session_id = {}
+
+    def create_session(self, user_id: str = None) -> str:
+        """ create a session id for a user
         """
-        if path is None:
-            return True
 
-        if excluded_paths is None or len(excluded_paths) == 0:
-            return True
+        if user_id is None or type(user_id) is not str:
+            return None
+        session_id = str(uuid.uuid4())
+        self.user_id_by_session_id.update({session_id: user_id})
+        return session_id
 
-        normalized_path = path.rstrip('/')
+    def user_id_for_session_id(self, session_id: str = None) -> str:
+        """ retrieve user id associated with session_id
+        """
 
-        for excluded_path in excluded_paths:
-            if normalized_path == excluded_path.rstrip('/'):
-                return False
+        if session_id is None or type(session_id) is not str:
+            return None
+        user_id = self.user_id_by_session_id.get(session_id)
+        return user_id
 
+    def current_user(self, request=None):
+        """ return the authenticated user
+        """
+
+        sesh_cookie = self.session_cookie(request)
+        user_id = self.user_id_for_session_id(sesh_cookie)
+        user = User.get(user_id)
+        return user
+
+    def destroy_session(self, request=None):
+        """ Remove a session
+        """
+
+        if request is None:
+            return False
+        cookie = self.session_cookie(request)
+        if cookie is None:
+            return False
+        if self.user_id_for_session_id(cookie) is None:
+            return False
+        print("checking sessions")
+        print(self.user_id_for_session_id(request))
+        del self.user_id_by_session_id[cookie]
         return True
-
-    def authorization_header(self, request=None) -> str:
-        """ Retrieves the authorization header from the request
-        Args:
-            request: The Flask request object
-        Returns:
-            str: None, as we are not implementing this now
-        """
-        if request is None:
-            return None
-        return request.headers.get('Authorization', None)
-
-    def current_user(self, request=None) -> User:
-        """ Retrieves the current user from the request
-        Args:
-            request: The Flask request object
-        Returns:
-            User: None, as we are not implementing this now
-        """
-        return None
-
-    def session_cookie(self, request=None):
-        """
-        Retrieves the session cookie value from the request.
-
-        Args:
-            request: The Flask request object
-
-        Returns:
-            str: value of session cookie (_my_session_id), None if not found
-        """
-        if request is None:
-            return None
-
-        # Retrieve the cookie name from the environment variable SESSION_NAME
-        cookie_name = os.getenv('SESSION_NAME', '_my_session_id')
-
-        # Return the value of the session cookie if it exists
-        return request.cookies.get(cookie_name, None)
