@@ -15,5 +15,6 @@ class BasicAuth(Auth):
     to handle user authentication.
     """
     def handle_status_request(self, request):
-        # Do nothing special for status request
+        """Do nothing special for status request
+        """
         pass
