@@ -21,13 +21,17 @@ def handle_request():
                      '/api/v1/unauthorized/',
                      '/api/v1/forbidden/']
 
+    # Check if the current path requires authentication
     if auth is not None and auth.require_auth(request.path, handled_paths):
+        # If authentication is required, check for the Authorization header
         if auth.authorization_header(request) is None:
             abort(401)
 
+        # check if the user is authenticated
         if auth.current_user(request) is None:
             abort(403)
 
+    # Allow unauthenticated access to /api/v1/status
     if request.path == '/api/v1/status/' and auth is not None:
         auth.handle_status_request(request)
 
