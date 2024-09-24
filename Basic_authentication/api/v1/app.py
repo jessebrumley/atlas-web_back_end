@@ -41,6 +41,11 @@ def forbidden(error) -> str:
 
 @app.before_request
 def before_request() -> None:
+    """ Validates each request before processing
+    Raises:
+        401: If authorization header is missing
+        403: If current user is not authenticated
+    """
     if auth is None:
         return
 
