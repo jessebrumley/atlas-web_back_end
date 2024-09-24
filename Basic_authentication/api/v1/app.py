@@ -25,7 +25,7 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 @app.before_request
 def handle_request():
     """Handle request authorization."""
-    handled_paths = ['/api/v1/status',  # Removed trailing slash
+    handled_paths = ['/api/v1/status',
                      '/api/v1/unauthorized',
                      '/api/v1/forbidden']
     if auth is not None:
@@ -52,6 +52,12 @@ def not_authorized(error) -> str:
 def access_forbidden(error) -> str:
     """Forbidden route handler."""
     return jsonify({"error": "Forbidden"}), 403
+
+
+@app_views.route('/api/v1/status', methods=['GET'])
+def status():
+    """Returns the status of the API."""
+    return jsonify({"status": "OK"}), 200
 
 
 if __name__ == "__main__":
