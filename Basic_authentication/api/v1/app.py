@@ -18,7 +18,10 @@ else:
     auth = Auth()
 
 app = Flask(__name__)
+
+# Register the blueprint here to ensure it's only done once
 app.register_blueprint(app_views)
+
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 
