@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Route module for the API
+Route module for the API.
 """
+
 from os import getenv
 from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
@@ -41,25 +42,50 @@ def handle_request():
 
 @app.errorhandler(404)
 def not_found(error) -> str:
-    """Not found handler."""
+    """Not found handler.
+
+    Args:
+        error: The error object.
+
+    Returns:
+        A JSON response with a 404 status.
+    """
     return jsonify({"error": "Not found"}), 404
 
 
 @app.errorhandler(401)
 def not_authorized(error) -> str:
-    """Not authorized handler."""
+    """Not authorized handler.
+
+    Args:
+        error: The error object.
+
+    Returns:
+        A JSON response with a 401 status.
+    """
     return jsonify({"error": "Unauthorized"}), 401
 
 
 @app.errorhandler(403)
 def access_forbidden(error) -> str:
-    """Forbidden route handler."""
+    """Forbidden route handler.
+
+    Args:
+        error: The error object.
+
+    Returns:
+        A JSON response with a 403 status.
+    """
     return jsonify({"error": "Forbidden"}), 403
 
 
 @app_views.route('/api/v1/status', methods=['GET'])
 def status():
-    """Returns the status of the API."""
+    """Returns the status of the API.
+
+    Returns:
+        A JSON response with the status of the API.
+    """
     return jsonify({"status": "OK"}), 200
 
 
