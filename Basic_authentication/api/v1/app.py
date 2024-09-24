@@ -25,6 +25,13 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 @app.before_request
 def handle_request():
+    """Handle request authorization.
+
+    This function checks if the request path requires authentication.
+
+    Returns:
+        None
+    """
     handled_paths = ['/api/v1/status/',
                      '/api/v1/unauthorized/',
                      '/api/v1/forbidden/']
