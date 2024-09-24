@@ -3,6 +3,7 @@
 """
 from flask import request
 from typing import List, TypeVar
+import os
 
 User = TypeVar('User')
 
@@ -19,18 +20,14 @@ class Auth:
         Returns:
             bool: True if authentication is required, False otherwise
         """
-        # Return True if path is None
         if path is None:
             return True
 
-        # Return True if excluded_paths is None or empty
         if excluded_paths is None or len(excluded_paths) == 0:
             return True
 
-        # Normalize the path to remove trailing slashes for comparison
         normalized_path = path.rstrip('/')
 
-        # Check if the normalized path is in excluded_paths
         for excluded_path in excluded_paths:
             if normalized_path == excluded_path.rstrip('/'):
                 return False
@@ -56,3 +53,22 @@ class Auth:
             User: None, as we are not implementing this now
         """
         return None
+
+    def session_cookie(self, request=None):
+        """
+        Retrieves the session cookie value from the request.
+
+        Args:
+            request: The Flask request object
+
+        Returns:
+            str: value of session cookie (_my_session_id), None if not found
+        """
+        if request is None:
+            return None
+
+        # Retrieve the cookie name from the environment variable SESSION_NAME
+        cookie_name = os.getenv('SESSION_NAME', '_my_session_id')
+
+        # Return the value of the session cookie if it exists
+        return request.cookies.get(cookie_name, None)
