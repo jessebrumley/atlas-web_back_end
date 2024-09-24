@@ -44,7 +44,9 @@ class Auth:
         Returns:
             str: None, as we are not implementing this now
         """
-        return None
+        if request is None:
+            return None
+        return request.headers.get('Authorization', None)
 
     def current_user(self, request=None) -> User:
         """ Retrieves the current user from the request
