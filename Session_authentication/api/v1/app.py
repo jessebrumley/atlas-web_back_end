@@ -30,15 +30,22 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 def handle_request():
     """ Handle request authorization
     """
-    handled_paths = ['/api/v1/status/',
-                     '/api/v1/unauthorized/',
-                     '/api/v1/forbidden/']
+    handled_paths = [
+        '/api/v1/status/',
+        '/api/v1/unauthorized/',
+        '/api/v1/forbidden/',
+        '/api/v1/auth_session/login/'  # New excluded path
+    ]
+
     if auth is not None:
         if auth.require_auth(request.path, handled_paths) is True:
-            if auth.authorization_header(request) is None:
-                abort(401)
+            if (
+                auth.authorization_header(request) is None and
+                auth.session_cookie(request) is None
+            ):
+                abort(401)  # Unauthorized access
             if auth.current_user(request) is None:
-                abort(403)
+                abort(403)  # Forbidden access
 
 
 @app.errorhandler(404)
