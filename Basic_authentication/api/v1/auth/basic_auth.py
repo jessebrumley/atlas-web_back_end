@@ -14,4 +14,6 @@ class BasicAuth(Auth):
     This class implements basic authentication methods and functionalities
     to handle user authentication.
     """
-    pass
+    def handle_status_request(self, request):
+        # Do nothing special for status request
+        pass

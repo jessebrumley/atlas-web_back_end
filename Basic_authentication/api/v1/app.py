@@ -17,46 +17,44 @@ else:
     from api.v1.auth.auth import Auth
     auth = Auth()
 
-
 app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
-
 @app.before_request
 def handle_request():
-    """Handle request authorization.
-
-    This function checks if the request path requires authentication.
-
-    Returns:
-        None
+    """ Handle request authorization
     """
     handled_paths = ['/api/v1/status/',
                      '/api/v1/unauthorized/',
                      '/api/v1/forbidden/']
-    if auth is not None:
-        if auth.require_auth(request.path, handled_paths):
-            if auth.authorization_header(request) is None:
-                abort(401)
-            if auth.current_user(request) is None:
-                abort(403)
+    
+    # Check if the current path requires authentication
+    if auth is not None and auth.require_auth(request.path, handled_paths):
+        # If authentication is required, check for the Authorization header
+        if auth.authorization_header(request) is None:
+            abort(401)
+        
+        # If the Authorization header is present, check if the user is authenticated
+        if auth.current_user(request) is None:
+            abort(403)
+    
+    # Allow unauthenticated access to /api/v1/status
+    if request.path == '/api/v1/status/' and auth is not None:
+        auth.handle_status_request(request)
 
 
 @app.errorhandler(404)
 def not_found(error) -> str:
     return jsonify({"error": "Not found"}), 404
 
-
 @app.errorhandler(401)
 def not_authorized(error) -> str:
     return jsonify({"error": "Unauthorized"}), 401
 
-
 @app.errorhandler(403)
 def access_forbidden(error) -> str:
     return jsonify({"error": "Forbidden"}), 403
-
 
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
