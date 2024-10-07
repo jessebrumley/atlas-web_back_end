@@ -11,7 +11,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
-    def count_calls(method: Callable) -> Callable:
+    def count_calls(self, method: Callable) -> Callable:
         """
         Counts the number of times a method is called
 
