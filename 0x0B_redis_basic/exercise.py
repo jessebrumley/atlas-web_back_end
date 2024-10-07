@@ -108,7 +108,7 @@ def replay(cache: Cache, method: Callable) -> None:
     # Create keys for inputs and outputs
     input_key = f"{method.__qualname__}:inputs"
     output_key = f"{method.__qualname__}:outputs"
-    
+
     # Get the history from Redis
     inputs = cache._redis.lrange(input_key, 0, -1)
     outputs = cache._redis.lrange(output_key, 0, -1)
