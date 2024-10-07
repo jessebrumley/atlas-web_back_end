@@ -97,18 +97,19 @@ class Cache:
         return self.get(key, lambda x: int(x))
 
 
-def replay(method: Callable) -> None:
+def replay(cache: Cache, method: Callable) -> None:
     """
     Display the history of calls for a particular method.
 
     Args:
+        cache: The Cache instance containing the Redis client.
         method: The method to replay history for.
     """
     # Create keys for inputs and outputs
     input_key = f"{method.__qualname__}:inputs"
     output_key = f"{method.__qualname__}:outputs"
 
-    # Get from Redis
+    # Get the history from Redis
     inputs = cache._redis.lrange(input_key, 0, -1)
     outputs = cache._redis.lrange(output_key, 0, -1)
 
