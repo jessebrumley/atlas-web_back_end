@@ -12,6 +12,7 @@ class Cache:
         self._redis.flushdb()
 
 
+    @count_calls  # Decorate the store method with count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         Stores data in Redis with a random key
@@ -58,6 +59,7 @@ class Cache:
         # Call get method and convert to integer
         return self.get(key, lambda x: int(x))
     
+
 def count_calls(method: Callable) -> Callable:
     """
     Counts the number of times a method is called
@@ -80,10 +82,3 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwargs)
     
     return wrapper
-
-@count_calls  # Decorate the store method with count_calls
-def store(self, data: Union[str, bytes, int, float]) -> str:
-    """Stores data in Redis with a random key."""
-    key = str(uuid.uuid4())
-    self._redis.set(key, data)
-    return key
