@@ -11,7 +11,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
-    def count_calls(self, method: Callable) -> Callable:
+    def count_calls(method: Callable) -> Callable:
         """
         Counts the number of times a method is called
 
@@ -25,13 +25,13 @@ class Cache:
         def wrapper(self, *args, **kwargs):
             # Use the method's name to create a Redis key for counting
             key = method.__qualname__
-
+            
             # Increment the count for this method in Redis
             self._redis.incr(key)
-
+            
             # Call the original method and return its result
             return method(self, *args, **kwargs)
-
+        
         return wrapper
 
     @count_calls  # Decorate the store method with count_calls
