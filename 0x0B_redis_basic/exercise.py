@@ -99,26 +99,19 @@ class Cache:
 
 def replay(cache: Cache, method: Callable) -> None:
     """
-    Display the history of calls for a particular method.
+    Display the history of calls of a particular function.
 
     Args:
-        cache: The Cache instance containing the Redis client.
-        method: The method to replay history for.
+        cache: An instance of Cache to access Redis history.
+        method: The method whose history we want to replay.
     """
-    # Create keys for inputs and outputs
-    input_key = f"{method.__qualname__}:inputs"
-    output_key = f"{method.__qualname__}:outputs"
+    input_key = method.__qualname__ + ":inputs"
+    output_key = method.__qualname__ + ":outputs"
 
-    # Get the history from Redis
     inputs = cache._redis.lrange(input_key, 0, -1)
     outputs = cache._redis.lrange(output_key, 0, -1)
 
-    # Count the number of times the method was called
-    call_count = len(inputs)
+    print(f"{method.__qualname__} was called {len(inputs)} times:")
 
-    # Print the call count
-    print(f"{method.__qualname__} was called {call_count} times:")
-
-    # Print each input and corresponding output
     for inp, out in zip(inputs, outputs):
-        print(f"{method.__qualname__}(*{eval(inp)}) -> {out.decode('utf-8')}")
+        print(f"{method.__qualname__}(*{eval(inp)}) -> {out.decode()}")
