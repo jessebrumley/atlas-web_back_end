@@ -10,6 +10,6 @@ def list_all(mongo_collection):
         mongo_collection: Mongo DB collection
 
     Returns:
-       Empty list or all documents in collection
+       Empty list or all documents in the MonogoDB collection
     """
     return mongo_collection.find()
