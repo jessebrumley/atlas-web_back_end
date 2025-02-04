@@ -3,9 +3,9 @@
 
 import unittest
 from parameterized import parameterized
-from typing import Mapping, Sequence, Any
+from typing import Mapping, Sequence, Any, Tuple
 from utils import access_nested_map
-import sys
+
 
 class TestAccessNestedMap(unittest.TestCase):
     """Test cases for access_nested_map."""
@@ -21,13 +21,6 @@ class TestAccessNestedMap(unittest.TestCase):
         """Test access_nested_map returns expected output."""
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
+
 if __name__ == "__main__":
-    runner = unittest.TextTestRunner(stream=sys.stdout, verbosity=0)
-    result = unittest.defaultTestLoader.loadTestsFromTestCase(TestAccessNestedMap)
-    test_result = runner.run(result)
-    
-    if test_result.wasSuccessful():
-        print("OK")  # Testing checker issues: my tests all pass!
-        sys.exit(0)
-    else:
-        sys.exit(1)
+    unittest.main(verbosity=0)
