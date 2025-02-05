@@ -3,11 +3,11 @@
 
 import unittest
 from parameterized import parameterized
-from typing import Mapping, Sequence, Any, Tuple
 from utils import access_nested_map
 from unittest.mock import patch, Mock
 from utils import get_json
 from utils import memoize
+from typing import Mapping, Sequence, Any
 
 
 class TestAccessNestedMap(unittest.TestCase):
