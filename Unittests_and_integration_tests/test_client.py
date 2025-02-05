@@ -140,7 +140,6 @@ class TestGithubOrgClient(unittest.TestCase):
                 repository's license data.
             license_key (str): The license key to check for in the repository.
             expected_result (bool): The expected result based on license check.
-
         """
         result: bool = GithubOrgClient.has_license(repo, license_key)
         self.assertEqual(result, expected_result)
