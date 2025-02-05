@@ -38,7 +38,7 @@ class TestGithubOrgClient(unittest.TestCase):
         """Test that _public_repos_url returns the expected value"""
 
         # Define the mocked payload for the org property
-        mocked_org_payload = {
+        mocked_org_payload: Dict[str, str] = {
             "repos_url": "https://api.github.com/orgs/google/repos"
         }
 
@@ -52,7 +52,7 @@ class TestGithubOrgClient(unittest.TestCase):
             client = GithubOrgClient("google")
 
             # Test the _public_repos_url property
-            result = client._public_repos_url
+            result: str = client._public_repos_url
 
             # Checks that the result is the expected URL
             self.assertEqual(result, mocked_org_payload["repos_url"])
