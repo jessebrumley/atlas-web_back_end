@@ -60,6 +60,42 @@ class TestGithubOrgClient(unittest.TestCase):
             # Check that org is only accessed once
             mock_org.assert_called_once()
 
+    @patch("client.get_json")  # Mock get_json
+    def test_public_repos(self, mock_get_json: Mock) -> None:
+        """Test that public_repos returns as expected"""
+
+        # Define the mocked response from get_json
+        mocked_repos_payload: list[dict[str, str]] = [
+            {"name": "repo1"},
+            {"name": "repo2"},
+            {"name": "repo3"},
+        ]
+        mock_get_json.return_value = mocked_repos_payload
+
+        # Define the mocked URL for _public_repos_url
+        mocked_url: str = "https://api.github.com/orgs/google/repos"
+
+        # Patch _public_repos_url directly here to return the mocked URL
+        with patch.object(
+            GithubOrgClient,
+            "_public_repos_url",
+            new_callable=PropertyMock,
+            return_value=mocked_url
+        ):
+            client: GithubOrgClient = GithubOrgClient("google")
+
+            # Call the method under test
+            result: list[str] = client.public_repos()
+
+            # Expected list of repo names
+            expected_result: list[str] = ["repo1", "repo2", "repo3"]
+
+            # Assert the result matches expectations
+            self.assertEqual(result, expected_result)
+
+            # Ensure get_json was called once with the correct URL
+            mock_get_json.assert_called_once_with(mocked_url)
+
 
 if __name__ == "__main__":
     unittest.main()
