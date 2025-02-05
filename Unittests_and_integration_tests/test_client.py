@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import patch, Mock, PropertyMock
 from parameterized import parameterized
 from client import GithubOrgClient
-from typing import Dict
+from typing import Dict, List, Any
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -46,10 +46,12 @@ class TestGithubOrgClient(unittest.TestCase):
         with patch.object(
             GithubOrgClient, "org", new_callable=PropertyMock
         ) as mock_org:
+            mock_org: Mock = mock_org
+
             mock_org.return_value = mocked_org_payload
 
             # Instantiate the client
-            client = GithubOrgClient("google")
+            client: GithubOrgClient = GithubOrgClient("google")
 
             # Test the _public_repos_url property
             result: str = client._public_repos_url
@@ -65,7 +67,7 @@ class TestGithubOrgClient(unittest.TestCase):
         """Test that public_repos returns as expected"""
 
         # Define the mocked response from get_json
-        mocked_repos_payload: list[dict[str, str]] = [
+        mocked_repos_payload: List[Dict[str, str]] = [
             {"name": "repo1"},
             {"name": "repo2"},
             {"name": "repo3"},
@@ -85,10 +87,10 @@ class TestGithubOrgClient(unittest.TestCase):
             client: GithubOrgClient = GithubOrgClient("google")
 
             # Call the method under test
-            result: list[str] = client.public_repos()
+            result: List[str] = client.public_repos()
 
             # Expected list of repo names
-            expected_result: list[str] = ["repo1", "repo2", "repo3"]
+            expected_result: List[str] = ["repo1", "repo2", "repo3"]
 
             # Assert the result matches expectations
             self.assertEqual(result, expected_result)
