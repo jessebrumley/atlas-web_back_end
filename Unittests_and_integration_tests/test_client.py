@@ -8,7 +8,7 @@ from typing import Dict, List, Any
 
 
 class TestGithubOrgClient(unittest.TestCase):
-    """Tests for GithubOrgClient"""
+    """Unit tests for the GithubOrgClient class."""
 
     @parameterized.expand([
         ("google",),
@@ -16,7 +16,15 @@ class TestGithubOrgClient(unittest.TestCase):
     ])
     @patch("client.get_json")  # Mock get_json
     def test_org(self, org_name: str, mock_get_json: Mock) -> None:
-        """Test that GithubOrgClient.org() returns the correct value"""
+        """
+        Test that the 'org' property of GithubOrgClient returns the correct
+        values for different organizations.
+
+        Args:
+            org_name (str): The name of the organization to be tested.
+            mock_get_json (Mock): Mocked version of the get_json function.
+        """
+
         # Mock API response
         mocked_response: Dict[str, str] = {
             "name": org_name,
@@ -35,7 +43,16 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, mocked_response)
 
     def test_public_repos_url(self) -> None:
-        """Test that _public_repos_url returns the expected value"""
+        """
+        Test that the '_public_repos_url' property returns the correct URL
+        for the given organization.
+
+        This method tests the functionality of the '_public_repos_url' property
+        in the GithubOrgClient class using a mocked version of 'org' property.
+
+        Args:
+            None
+        """
 
         # Define the mocked payload for the org property
         mocked_org_payload: Dict[str, str] = {
@@ -64,7 +81,16 @@ class TestGithubOrgClient(unittest.TestCase):
 
     @patch("client.get_json")  # Mock get_json
     def test_public_repos(self, mock_get_json: Mock) -> None:
-        """Test that public_repos returns as expected"""
+        """
+        Test that the 'public_repos' method returns a list of repository names
+        for the given organization.
+
+        This method tests the behavior of the 'public_repos' method by mocking
+        the response from the 'get_json' function.
+
+        Args:
+            mock_get_json (Mock): Mocked version of the get_json function.
+        """
 
         # Define the mocked response from get_json
         mocked_repos_payload: List[Dict[str, str]] = [
@@ -97,6 +123,27 @@ class TestGithubOrgClient(unittest.TestCase):
 
             # Ensure get_json was called once with the correct URL
             mock_get_json.assert_called_once_with(mocked_url)
+
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False),
+    ])
+    def test_has_license(
+        self, repo: Dict[str, Any], license_key: str, expected_result: bool
+    ) -> None:
+        """
+        Test that the 'has_license' method correctly checks for the given
+        license key in the repository's license information.
+
+        Args:
+            repo (Dict[str, Dict[str, str]]): A dictionary representing the
+                repository's license data.
+            license_key (str): The license key to check for in the repository.
+            expected_result (bool): The expected result based on license check.
+
+        """
+        result: bool = GithubOrgClient.has_license(repo, license_key)
+        self.assertEqual(result, expected_result)
 
 
 if __name__ == "__main__":
