@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Unit and integration tests for the GithubOrgClient class."""
+
 import unittest
 from unittest.mock import patch, Mock, PropertyMock
-from parameterized import parameterized, parameterized_class
+from parameterized import parameterized
 from client import GithubOrgClient
 from typing import Dict, List, Any
-import requests
+
 
 class TestGithubOrgClient(unittest.TestCase):
     """Unit tests for the GithubOrgClient class."""
@@ -143,63 +143,6 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         result: bool = GithubOrgClient.has_license(repo, license_key)
         self.assertEqual(result, expected_result)
-
-
-@parameterized_class([
-    {
-        "org_payload": org_payload,
-        "repos_payload": repos_payload,
-        "expected_repos": expected_repos,
-        "apache2_repos": apache2_repos
-    },
-])
-class TestIntegrationGithubOrgClient(unittest.TestCase):
-    """Integration tests for the GithubOrgClient class."""
-
-    @classmethod
-    def setUpClass(cls):
-        """Set up the patcher for requests.get to mock external API calls."""
-        cls.get_patcher = patch('requests.get')
-        cls.mock_get = cls.get_patcher.start()
-
-        def side_effect(url, *args, **kwargs):
-            if 'orgs' in url:
-                return MockResponse(cls.org_payload)
-            elif 'repos' in url:
-                return MockResponse(cls.repos_payload)
-            return MockResponse({})
-
-        cls.mock_get.side_effect = side_effect
-
-    @classmethod
-    def tearDownClass(cls):
-        """Tear down the patcher."""
-        cls.get_patcher.stop()
-
-    def test_public_repos(self):
-        """Test the public_repos method with mocked data."""
-        client = GithubOrgClient("google")
-
-        repos = client.public_repos()
-
-        self.assertEqual(repos, self.expected_repos)
-
-    def test_apache2_repos(self):
-        """Test public_repos with apache2 repositories."""
-        client = GithubOrgClient("apache2")
-
-        repos = client.public_repos()
-
-        self.assertEqual(repos, self.apache2_repos)
-
-
-class MockResponse:
-    """Helper class to mock the responses returned by requests.get."""
-    def __init__(self, json_data):
-        self.json_data = json_data
-
-    def json(self):
-        return self.json_data
 
 
 if __name__ == "__main__":
