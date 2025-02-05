@@ -7,6 +7,8 @@ from typing import Mapping, Sequence, Any, Tuple
 from utils import access_nested_map
 from unittest.mock import patch, Mock
 from utils import get_json
+from utils import memoize
+
 
 class TestAccessNestedMap(unittest.TestCase):
     """Test cases for access_nested_map."""
@@ -54,6 +56,27 @@ class TestGetJson(unittest.TestCase):
         # Assertions
         mock_get.assert_called_once_with(test_url)
         self.assertEqual(result, test_payload)
+
+class TestMemoize(unittest.TestCase):
+    """Test cases for memoize decorator."""
+
+    class TestClass:
+        """Class with a memoized property"""
+
+        def a_method(self) -> int:
+            return 42
+
+        @memoize
+        def a_property(self) -> int:
+            return self.a_method()
+
+    def test_memoize(self) -> None:
+        """Tests a_method is only called once if attempted multiple times."""
+        test_instance = self.TestClass()
+        with patch.object(test_instance, "a_method", return_value=42) as mock_method:
+            self.assertEqual(test_instance.a_property, 42)
+            self.assertEqual(test_instance.a_property, 42)
+            mock_method.assert_called_once()
 
 
 if __name__ == "__main__":
