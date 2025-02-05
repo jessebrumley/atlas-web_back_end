@@ -19,7 +19,11 @@ class TestAccessNestedMap(unittest.TestCase):
         ("deeply_nested_key", {"a": {"b": 2}}, ("a", "b"), 2),
     ])
     def test_access_nested_map(
-        self, name: str, nested_map: Mapping[str, Any], path: Sequence[str], expected: Any
+        self,
+        name: str,
+        nested_map: Mapping[str, Any],
+        path: Sequence[str],
+        expected: Any
     ) -> None:
         """Test access_nested_map returns expected output."""
         self.assertEqual(access_nested_map(nested_map, path), expected)
@@ -35,6 +39,7 @@ class TestAccessNestedMap(unittest.TestCase):
         with self.assertRaises(KeyError):
             access_nested_map(nested_map, path)
 
+
 class TestGetJson(unittest.TestCase):
     """Test cases for get_json function."""
 
@@ -43,7 +48,9 @@ class TestGetJson(unittest.TestCase):
         ("holberton_io", "http://holberton.io", {"payload": False}),
     ])
     @patch("utils.requests.get")
-    def test_get_json(self, name: str, test_url: str, test_payload: dict, mock_get: Mock) -> None:
+    def test_get_json(
+        self, name: str, test_url: str, test_payload: dict, mock_get: Mock
+    ) -> None:
         """Test that get_json returns the expected result."""
         # Mock response object
         mock_response = Mock()
@@ -56,6 +63,7 @@ class TestGetJson(unittest.TestCase):
         # Assertions
         mock_get.assert_called_once_with(test_url)
         self.assertEqual(result, test_payload)
+
 
 class TestMemoize(unittest.TestCase):
     """Test cases for memoize decorator."""
@@ -73,7 +81,9 @@ class TestMemoize(unittest.TestCase):
     def test_memoize(self) -> None:
         """Tests a_method is only called once if attempted multiple times."""
         test_instance = self.TestClass()
-        with patch.object(test_instance, "a_method", return_value=42) as mock_method:
+        with patch.object(
+            test_instance, "a_method", return_value=42
+        ) as mock_method:
             self.assertEqual(test_instance.a_property, 42)
             self.assertEqual(test_instance.a_property, 42)
             mock_method.assert_called_once()
