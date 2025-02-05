@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Unit and integration tests for the GithubOrgClient class."""
 
 import unittest
 from unittest.mock import patch, Mock, PropertyMock
