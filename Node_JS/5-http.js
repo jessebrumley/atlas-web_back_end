@@ -39,13 +39,16 @@ const app = http.createServer(async (req, res) => {
   } else if (url === '/students') {
     // Route for /students (no database)
     res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
     res.end('Please enter a student database. Example: /students/database.csv\n');
   } else if (url.startsWith('/students/')) {
     // Route that imports database from the URL
     const dbPath = url.split('/')[2];
 
     try {
+      // Send the initial response
+      res.statusCode = 200;
+      res.write('This is the list of our students\n\n');
+
       // Await the result from countStudents
       const result = await countStudents(dbPath);
 
@@ -54,7 +57,6 @@ const app = http.createServer(async (req, res) => {
 
       // Send the captured logs and the result to the client
       res.statusCode = 200;
-      res.setHeader('Content-Type', 'text/plain');
       res.end(logBuffer + resultText); // Append the logBuffer to the result
 
     } catch (error) {
@@ -66,7 +68,6 @@ const app = http.createServer(async (req, res) => {
   } else {
     // For any other path, respond with "Not Found"
     res.statusCode = 404;
-    res.setHeader('Content-Type', 'text/plain');
     res.end('Not Found\n');
   }
 
@@ -77,7 +78,7 @@ const app = http.createServer(async (req, res) => {
 
 // The server listens on port 1245
 app.listen(1245, () => {
-  console.log('Server is running on http://localhost:1245');
+  console.log('');
 });
 
 // Server is assigned and exported to the variable app
