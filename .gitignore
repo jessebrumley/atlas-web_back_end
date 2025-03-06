@@ -6294,3 +6294,4 @@ __pycache__/
 *.pyo
 *.pyd
 queuing_system_in_js/dump.rdb
+queuing_system_in_js/test.js
