@@ -1,0 +1,47 @@
+{
+  "genres": [
+    {
+      "id": "int",
+      "name": "str",
+      "name": "str",
+      "artists": [
+        {
+      "artists": [
+        {
+          "id": "int",
+          "name": "str",
+          "id": "int",
+          "name": "str",
+          "albums": [
+            {
+          "albums": [
+            {
+              "id": "int",
+              "title": "str",
+              "id": "int",
+              "title": "str",
+              "release_year": "str",
+              "songs": [
+              "release_year": "str",
+              "songs": [
+                {
+                  "id": "int",
+                {
+                  "id": "int",
+                  "title": "str",
+                  "title": "str",
+                  "duration": "int",
+                  "preview": "str"
+                  "duration": "int",
+                  "preview": "str"
+                }
+                }
+              ]
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -9,7 +9,7 @@ This project was created as part of a school assignment where the objective is t
 ## 📌 Project Overview
 
 - **Goal**: Design and develop a fully functional API centered on a music-related concept.
-- **Developer**: [Jesse Brumley](https://github.com/jessebrumley)
+- 
 - **Development Timeframe**: 2 weeks
 - **MVP**: Create an API that allows structured navigation through music genres, connecting to related artists, their albums, and individual songs.
 
@@ -43,3 +43,4 @@ This project was created as part of a school assignment where the objective is t
 3. Set up the local database
 4. Run the API server
 5. Use **Postman** to test all endpoints
+
