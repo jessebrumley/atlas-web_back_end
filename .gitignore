@@ -6295,3 +6295,5 @@ __pycache__/
 *.pyd
 queuing_system_in_js/dump.rdb
 queuing_system_in_js/test.js
+custom-api-from-scratch/test
+custom-api-from-scratch/test.js
