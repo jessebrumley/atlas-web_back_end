@@ -1,0 +1,332 @@
+#!/usr/bin/env node
+
+const express = require('express');
+const fs = require('fs');
+const app = express();
+const PORT = 3000;
+
+// data
+const rawData = fs.readFileSync('data.json');
+const data = JSON.parse(rawData);
+
+app.use(express.json());
+
+// routes
+app.get('/', (req, res) => {
+  res.send('Welcome to the Music API');
+});
+
+// List all genres
+app.get('/genres', (req, res) => {
+  const genres = data.genres.map(({ id, name }) => ({ id, name }));
+  res.json(genres);
+});
+
+// Get genre by ID or name, with optional albums or songs data
+app.get('/genres/:identifier', (req, res) => {
+  const { identifier } = req.params;
+  const { includeAlbums, includeSongs, includeAll } = req.query;
+  let genre;
+
+  if (/^\d+$/.test(identifier)) {
+    // checks if identifier is a number using Regex
+    genre = data.genres.find(g => g.id == parseInt(identifier));
+  } else {
+    // Otherwise assumes a string as a name
+    genre = data.genres.find(g => g.name.toLowerCase() === identifier.toLowerCase());
+  }
+
+  if (!genre) {
+    return res.status(404).json({ error: 'Genre not found' });
+  }
+
+  const genreCopy = { ...genre };
+
+  genreCopy.artists = (genre.artists || []).map(artist => {
+    let artistBase = { id: artist.id, name: artist.name };
+  
+    // Add albums if requested
+    if (includeAll === 'true' || includeAlbums === 'true' || includeSongs === 'true') {
+      artistBase.albums = (artist.albums || []).map(album => {
+        const albumBase = {
+          id: album.id,
+          title: album.title,
+          release_year: album.release_year
+        };
+  
+        if (includeAll === 'true') {
+          // Include all song details when includeAll is true
+          albumBase.songs = (album.songs || []).map(song => ({
+            id: song.id,
+            title: song.title,
+            duration: song.duration,
+            preview: song.preview
+          }));
+        } else if (includeSongs === 'true') {
+          // Include song titles only when includeSongs is true
+          albumBase.songs = (album.songs || []).map(song => song.title);
+        }
+  
+        return albumBase;
+      });
+    }
+  
+    return artistBase;
+  });
+  
+  res.json(genreCopy);
+  
+});
+
+// List all artists
+app.get('/artists', (req, res) => {
+  const artists = data.genres.flatMap(genre =>
+    (genre.artists || []).map(({ id, name }) => ({ id, name }))
+  );
+  res.json(artists);
+});
+
+// Get artist by ID or name, with optional albums and songs
+app.get('/artists/:identifier', (req, res) => {
+  const { identifier } = req.params;
+  const { includeAlbums, includeSongs, includeAll } = req.query;
+  let artist;
+
+  // Find the artist based on ID or name
+  for (const genre of data.genres) {
+    const found = (genre.artists || []).find(a =>
+      /^\d+$/.test(identifier)
+        ? a.id == parseInt(identifier)  // match by ID
+        : a.name.toLowerCase() === identifier.toLowerCase()  // match by name
+    );
+    if (found) {
+      artist = found;
+      break;
+    }
+  }
+
+  if (!artist) {
+    return res.status(404).json({ error: 'Artist not found' });
+  }
+
+  // Clone the artist to avoid modifying original data
+  const artistCopy = { ...artist };
+
+  // Add albums and songs if requested
+  if (includeAlbums === 'true' || includeSongs === 'true' || includeAll === 'true') {
+    artistCopy.albums = (artist.albums || []).map(album => {
+      const base = {
+        id: album.id,
+        title: album.title,
+        year: album.year
+      };
+
+      if (includeAll === 'true') {
+        return {
+          ...base,
+          songs: (album.songs || []).map(song => ({
+            id: song.id,
+            title: song.title,
+            duration: song.duration,
+            preview: song.preview
+          }))
+        };
+      }
+
+      if (includeSongs === 'true') {
+        return {
+          ...base,
+          songs: (album.songs || []).map(song => song.title)
+        };
+      }
+
+      return base;
+    });
+  } else {
+    delete artistCopy.albums; // Don't send albums if not requested
+  }
+
+  res.json(artistCopy);
+});
+
+// Get albums by artist's ID or name, with optional songs
+app.get('/artists/:identifier/albums', (req, res) => {
+  const { identifier } = req.params;
+  const { includeSongs, includeAll } = req.query; // added includeAll
+  let artist;
+
+  // Find the artist based on the identifier (ID or name)
+  for (const genre of data.genres) {
+    artist = genre.artists.find(a =>
+      /^\d+$/.test(identifier)
+        ? a.id == parseInt(identifier)
+        : a.name.toLowerCase() === identifier.toLowerCase()
+    );
+    if (artist) break;
+  }
+
+  if (!artist) {
+    return res.status(404).json({ error: 'Artist not found' });
+  }
+
+  let albums = artist.albums || [];
+
+  // If includeAll is true, include full song details for all albums
+  if (includeAll === 'true') {
+    albums = albums.map(album => ({
+      id: album.id,
+      title: album.title,
+      year: album.year,
+      songs: (album.songs || []).map(song => ({
+        id: song.id,
+        title: song.title,
+        duration: song.duration,
+        preview: song.preview
+      }))
+    }));
+  } else {
+    // Otherwise, strip out songs unless includeSongs is 'true'
+    if (includeSongs === 'true') {
+      albums = albums.map(album => ({
+        id: album.id,
+        title: album.title,
+        year: album.year,
+        songs: (album.songs || []).map(song => song.title)
+      }));
+    } else {
+      albums = albums.map(({ id, title, year }) => ({ id, title, year }));
+    }
+  }
+
+  res.json(albums);
+});
+
+
+// Get all songs for a specific album (by album ID or title)
+app.get(
+  [
+    '/albums/:identifier',
+    '/albums/:identifier/songs'
+  ],
+  (req, res) => {
+  const { identifier } = req.params;
+  let album;
+
+  // Loop through genres → artists → albums to find the album
+  for (const genre of data.genres) {
+    for (const artist of genre.artists) {
+      album = artist.albums.find(a =>
+        /^\d+$/.test(identifier)  // If identifier is a number, match by album ID
+          ? a.id === parseInt(identifier)
+          : a.title.toLowerCase() === identifier.toLowerCase()  // Otherwise match by album title
+      );
+      if (album) break;
+    }
+    if (album) break;
+  }
+
+  if (!album) {
+    return res.status(404).json({ error: 'Album not found' });
+  }
+
+  // Return the songs of the album
+  res.json(album.songs || []);
+});
+
+// Get songs by artist's album
+app.get(
+  [
+    '/artists/:artistIdentifier/albums/:albumIdentifier',
+    '/artists/:artistIdentifier/albums/:albumIdentifier/songs'
+  ],
+  (req, res) => {
+    const { artistIdentifier, albumIdentifier } = req.params;
+    const { includeAll } = req.query;
+    let artist;
+
+    // Find the artist by ID or name
+    for (const genre of data.genres) {
+      artist = genre.artists.find(a =>
+        /^\d+$/.test(artistIdentifier)
+          ? a.id == parseInt(artistIdentifier)
+          : a.name.toLowerCase() === artistIdentifier.toLowerCase()
+      );
+      if (artist) break;
+    }
+
+    if (!artist) {
+      return res.status(404).json({ error: 'Artist not found' });
+    }
+
+    // Find the album by ID or title within the artist's albums
+    const album = (artist.albums || []).find(alb =>
+      /^\d+$/.test(albumIdentifier)
+        ? alb.id == parseInt(albumIdentifier)
+        : alb.title.toLowerCase() === albumIdentifier.toLowerCase()
+    );
+
+    if (!album) {
+      return res.status(404).json({ error: 'Album not found for the specified artist' });
+    }
+
+    if (includeAll === 'true') {
+      // Include full details (artist, album, and songs)
+      return res.json({
+        artist: {
+          id: artist.id,
+          name: artist.name,
+          // include other artist details if needed
+        },
+        album: {
+          id: album.id,
+          title: album.title,
+          year: album.year,
+          songs: album.songs || [],
+          // include other album details if needed
+        }
+      });
+    }
+
+    // Otherwise, return just the song titles from the album
+    const songTitles = (album.songs || []).map(song => song.title);
+    res.json(songTitles);
+  }
+);
+
+// Get song(s) by ID or title
+app.get('/songs/:identifier', (req, res) => {
+  const { identifier } = req.params;
+  let song;
+
+  // Loop through genres → artists → albums → songs to find the song
+  for (const genre of data.genres) {
+    for (const artist of genre.artists) {
+      for (const album of artist.albums) {
+        song = album.songs.find(s =>
+          /^\d+$/.test(identifier)
+            ? s.id === parseInt(identifier)
+            : s.title.toLowerCase() === identifier.toLowerCase()
+        );
+        if (song) break;
+      }
+      if (song) break;
+    }
+    if (song) break;
+  }
+
+  if (!song) {
+    return res.status(404).json({ error: 'Song not found' });
+  }
+
+  res.json({
+    id: song.id,
+    title: song.title,
+    duration: song.duration,
+    preview: song.preview
+  });
+});
+
+// server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});

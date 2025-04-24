@@ -1,0 +1,201 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "My API",
+    "description": "Auto-generated docs",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/genres": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/genres/{identifier}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "includeAlbums",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "includeSongs",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "includeAll",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/artists": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/artists/{identifier}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "includeAlbums",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "includeSongs",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "includeAll",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/artists/{identifier}/albums": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "includeSongs",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "includeAll",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "[/artists/{artistIdentifier}/albums/{albumIdentifier}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "artistIdentifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "albumIdentifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "includeAll",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/songs/{identifier}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  }
+}

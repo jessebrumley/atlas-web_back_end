@@ -1,0 +1,25 @@
+server
+http://localhost:3000/
+
+genres
+http://localhost:3000/genres
+http://localhost:3000/genres/152
+http://localhost:3000/genres/pop
+
+artists
+http://localhost:3000/artists
+http://localhost:3000/artists/230
+http://localhost:3000/artists/Doja Cat?includeSongs=true
+http://localhost:3000/artists/Doja Cat?includeAll=true
+
+albums
+http://localhost:3000/albums/428991547
+http://localhost:3000/albums/72 Seasons
+http://localhost:3000/artists/Metallica/albums
+http://localhost:3000/artists/Metallica?includeAlbums=true
+http://localhost:3000/artists/Metallica/albums?includeSongs=true
+http://localhost:3000/artists/Metallica/albums?includeAll=true
+
+songs
+http://localhost:3000/songs/Inamorata
+http://localhost:3000/songs/2235238277

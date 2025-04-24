@@ -13,20 +13,37 @@
 ---
 
 ## ✅ Functional Requirements
+#### Genres
+- **GET /genres**: Retrieve a list of all music genres.
+    > Does not support queries
+- **GET /genres/{id}**: Retrieve a genre by its numeric ID.
+- **GET /genres/{name}**: Retrieve a genre by its name (case-insensitive).
+    > 💡 **Optional query:**  
+    > Add `?includeAlbums=true` to include the list of albums for each artist.  
+    > Add `?includeSongs=true` to include the list of albums and their songs for each artist.  
+    > Add `?includeAll=true` to include the list of albums, their songs, and all song info for each artist.  
+    > Omit the query to return only the `id` and `name` for each artist in that genre.
 
-1. **GET /genres**: Retrieve a list of all music genres.
-2. **GET /genres/{id}**: Retrieve a genre by its numeric ID.
-3. **GET /genres/{name}**: Retrieve a genre by its name (case-insensitive).
-4. **GET /artists**: Retrieve a list of all artists.
-5. **GET /artists/{id}**: Retrieve an artist by ID.
-6. **GET /artists/{name}**: Retrieve an artist by its name.
-7. **GET /albums**: Retrieve a list of all albums.
-8. **GET /albums/{id}**: Retrieve an album by ID.
-9. **GET /albums/{name}**: Retrieve an album by its name.
-10. **GET /songs**: Retrieve a list of all songs.
-11. **GET /songs/{id}**: Retrieve a song by ID.
-12. **GET /songs/{name}**: Retrieve a song by its name.
+#### Artists
+- **GET /artists**: Retrieve a list of all artists.
+    > Does not support queries
+- **GET /artists/{id}**: Retrieve an artist by ID.
+- **GET /artists/{name}**: Retrieve an artist by its name.
+    > 💡 **Optional query:**  
+    > Add `?includeSongs=true` to include the list of albums and their songs for each artist.  
+    > Add `?includeAll=true` to include the list of albums, their songs, and all song info for each artist.  
+    > Omit the query to return only each artist’s `id` and `name`.  
 
+#### Albums
+- **GET /artists/{id}/albums**: Retrieve a list of all albums for the requested artist by ID.
+- **GET /artists/{name}/albums**: Retrieve a list of all albums for the requested artist by name.
+- **GET /albums/{id}**: Retrieve an album by ID.
+- **GET /albums/{title}**: Retrieve all albums with this title
+    > 💡 **Optional query:**  Add `?includeAll=true` to include and all song info for each song on all albums.  
+
+#### Songs
+- **GET /songs/{id}**: Retrieve a song by ID.
+- **GET /songs/{title}**: Retrieve all songs with this title.
 ---
 
 ## ⚙️ Non-Functional Requirements
@@ -91,6 +108,7 @@ As per the project requirements, the following features are planned:
 - **API Documentation**: Auto-generate API documentation using Swagger with `swagger-jsdoc` and `swagger-ui-express`.
 - **Pagination**: Modify API endpoints to support pagination for large datasets.
 - **Optional Enhancements**: If time permits, implement user authentication, caching mechanisms, queuing systems, and WebSocket support.
+- **Input Normalization**: I want any use of spaces or underscores to work in the same way to ensure compatability with older web browsers.
 
 ---
 

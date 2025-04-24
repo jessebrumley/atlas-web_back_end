@@ -1,42 +1,61 @@
 {
   "genres": [
     {
-      "id": "int",
-      "name": "str",
-      "name": "str",
+      "id": 1,
+      "name": "Rock",
       "artists": [
         {
-      "artists": [
-        {
-          "id": "int",
-          "name": "str",
-          "id": "int",
-          "name": "str",
+          "id": 1,
+          "name": "Artist One",
           "albums": [
             {
-          "albums": [
-            {
-              "id": "int",
-              "title": "str",
-              "id": "int",
-              "title": "str",
-              "release_year": "str",
-              "songs": [
-              "release_year": "str",
+              "id": 1,
+              "title": "Album One",
+              "release_year": 2020,
               "songs": [
                 {
-                  "id": "int",
+                  "id": 1,
+                  "title": "Song One",
+                  "duration": 210,
+                  "preview": "url1"
+                },
                 {
-                  "id": "int",
-                  "title": "str",
-                  "title": "str",
-                  "duration": "int",
-                  "preview": "str"
-                  "duration": "int",
-                  "preview": "str"
-                }
+                  "id": 2,
+                  "title": "Song Two",
+                  "duration": 180,
+                  "preview": "url2"
                 }
               ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Jazz",
+      "artists": [
+        {
+          "id": 2,
+          "name": "Artist Two",
+          "albums": [
+            {
+              "id": 2,
+              "title": "Album Two",
+              "release_year": 2021,
+              "songs": [
+                {
+                  "id": 3,
+                  "title": "Song Three",
+                  "duration": 200,
+                  "preview": "url3"
+                },
+                {
+                  "id": 4,
+                  "title": "Song Four",
+                  "duration": 250,
+                  "preview": "url4"
+                }
               ]
             }
           ]
